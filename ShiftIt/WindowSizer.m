@@ -200,7 +200,7 @@ SINGLETON_BOILERPLATE(WindowSizer, sharedWindowSize);
 	FMTDevLog(@"visible screen rect (cocoa): %@", RECT_STR(visibleScreenRect));	
 	COCOA_TO_SCREEN_COORDINATES(visibleScreenRect);
 	FMTDevLog(@"visible screen rect: %@", RECT_STR(visibleScreenRect));	
-
+   
 	// execute shift it action to reposition the application window
 	ShiftItFunctionRef actionFunction = [action action];
 	NSRect shiftedRect = actionFunction(visibleScreenRect, windowRect);

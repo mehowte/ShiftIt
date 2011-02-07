@@ -27,42 +27,47 @@ BOOL equalRects(CGRect a, CGRect b) {
          fabsf(a.size.height - b.size.height) < 16.0f;
 }
 
+static int ratioCount = 5;
+static float ratios[] = {
+  1.0/2.0, 
+  2.0/3.0, 
+  3.0/4.0, 
+  1.0/3.0, 
+  2.0/5.0
+};
+
 NSRect ShiftIt_Left(NSRect screen, NSRect window) {
 	NSRect r = screen;
-  r.size.width *= 2.0f/3.0f;
 
-  if (equalRects(r,window)) {
-    r.size.width = screen.size.width / 3.0f;
-    return r;
+  for (int i = 0; i < ratioCount-1; i++) {
+    r.size.width = screen.size.width * ratios[i];
+
+    if (equalRects(r,window)) {
+      r.size.width = screen.size.width * ratios[i+1];
+      return r;
+    }
   }
   
-  r.size.width = screen.size.width / 2.0f;
-
-  if (equalRects(r,window))
-    r.size.width = screen.size.width * 2.0f / 3.0f;
-
+  r.size.width = screen.size.width * ratios[0];
   return r;
 }
 
 NSRect ShiftIt_Right(NSRect screen, NSRect window) {
 	NSRect r = screen;
-  r.origin.x = screen.origin.x + screen.size.width / 3.0f;
-  r.size.width *= 2.0f/3.0f;
   
-  if (equalRects(r,window)) {
-    r.origin.x = screen.origin.x + screen.size.width * 2.0f / 3.0f;
-    r.size.width = screen.size.width / 3.0f;
-    return r;
-  }
+  for (int i = 0; i < ratioCount-1; i++) {
+    r.size.width = screen.size.width * ratios[i];
+    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
 
-  r.origin.x = screen.origin.x + screen.size.width / 2.0f;
-  r.size.width = screen.size.width / 2.0f;
-  
-  if (equalRects(r,window)) {
-    r.origin.x = screen.origin.x + screen.size.width / 3.0f;
-    r.size.width = screen.size.width * 2.0f / 3.0f;
+    if (equalRects(r,window)) {
+      r.size.width = screen.size.width * ratios[i+1];
+      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+      return r;
+    }
   }
   
+  r.size.width = screen.size.width * ratios[0];
+  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
   return r;
 }
 
