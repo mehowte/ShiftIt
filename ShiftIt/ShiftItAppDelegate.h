@@ -24,7 +24,9 @@
 @class FMTHotKeyManager;
 
 @interface ShiftItAppDelegate : NSObject {
- @private
+	IBOutlet NSMenu *statusMenu_;
+
+@private
     PreferencesWindowController *preferencesController_;
 	FMTHotKeyManager *hotKeyManager_;	
 	WindowSizer *windowSizer_;
@@ -32,7 +34,6 @@
 	NSMutableDictionary *allHotKeys_;
 	BOOL paused_;
 
-	NSMenu *statusMenu_;
 	NSStatusItem *statusItem_;
 	NSImage *statusMenuItemIcon_;
 }

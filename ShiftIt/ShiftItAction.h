@@ -26,7 +26,7 @@
  * and has a size screenSize. The windowRect is the whole window
  * including any sort window decorators.
  */
-typedef NSRect (*ShiftItFunctionRef)(NSRect screenSize, NSRect windowRect); 
+typedef NSRect (*ShiftItFunctionRef)(NSRect screenSize, NSRect windowRect, NSRect screens[], int screenCount); 
 
 @interface ShiftItAction : NSObject {
  @private
@@ -41,6 +41,9 @@ typedef NSRect (*ShiftItFunctionRef)(NSRect screenSize, NSRect windowRect);
 @property (readonly) NSInteger uiTag;
 @property (readonly) ShiftItFunctionRef action;
 
-- (id) initWithIdentifier:(NSString *)identifier label:(NSString *)label uiTag:(NSInteger)uiTag action:(ShiftItFunctionRef)action;
+- (id) initWithIdentifier:(NSString *)identifier 
+                    label:(NSString *)label 
+                    uiTag:(NSInteger)uiTag 
+                   action:(ShiftItFunctionRef)action;
 
 @end

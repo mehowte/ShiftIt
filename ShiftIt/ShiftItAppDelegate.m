@@ -280,6 +280,7 @@ NSDictionary *allShiftActions = nil;
 	[dict setObject:top forKey:[top identifier]];
 	ShiftItAction *bottom = [[ShiftItAction alloc] initWithIdentifier:@"bottom" label:@"Bottom" uiTag:4 action:&ShiftIt_Bottom];
 	[dict setObject:bottom forKey:[bottom identifier]];
+
 	ShiftItAction *tl = [[ShiftItAction alloc] initWithIdentifier:@"tl" label:@"Top Left" uiTag:5 action:&ShiftIt_TopLeft];
 	[dict setObject:tl forKey:[tl identifier]];
 	ShiftItAction *tr = [[ShiftItAction alloc] initWithIdentifier:@"tr" label:@"Top Right" uiTag:6 action:&ShiftIt_TopRight];
@@ -288,10 +289,23 @@ NSDictionary *allShiftActions = nil;
 	[dict setObject:bl forKey:[bl identifier]];
 	ShiftItAction *br = [[ShiftItAction alloc] initWithIdentifier:@"br" label:@"Bottom Right" uiTag:8 action:&ShiftIt_BottomRight];
 	[dict setObject:br forKey:[br identifier]];
+
 	ShiftItAction *fullscreen = [[ShiftItAction alloc] initWithIdentifier:@"fullscreen" label:@"Full Screen" uiTag:9 action:&ShiftIt_FullScreen];
 	[dict setObject:fullscreen forKey:[fullscreen identifier]];
 	ShiftItAction *center = [[ShiftItAction alloc] initWithIdentifier:@"center" label:@"Center" uiTag:10 action:&ShiftIt_Center];
 	[dict setObject:center forKey:[center identifier]];
+
+	ShiftItAction *prevScreen = [[ShiftItAction alloc] initWithIdentifier:@"prevScreen"
+                                                                  label:@"Prev Screen" 
+                                                                  uiTag:11 
+                                                                 action:&ShiftIt_PrevScreen];
+	[dict setObject:prevScreen forKey:[prevScreen identifier]];
+
+	ShiftItAction *nextScreen = [[ShiftItAction alloc] initWithIdentifier:@"nextScreen" 
+                                                                  label:@"Next Screen" 
+                                                                  uiTag:12 
+                                                                 action:&ShiftIt_NextScreen];
+	[dict setObject:nextScreen forKey:[nextScreen identifier]];
 	
 	allShiftActions = [[NSDictionary dictionaryWithDictionary:dict] retain];
 }

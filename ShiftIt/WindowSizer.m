@@ -174,16 +174,26 @@ SINGLETON_BOILERPLATE(WindowSizer, sharedWindowSize);
 	FMTDevLog(@"window rect: %@", RECT_STR(windowRect));
 	
 #ifndef NDEBUG
-	 // dump screen info
-	 for (NSScreen *screen in [NSScreen screens]) {
-		 NSRect frame = [screen frame];
-		 NSRect visibleFrame = [screen visibleFrame];
+  // dump screen info
+	for (NSScreen *screen in [NSScreen screens]) {
+    NSRect frame = [screen frame];
+		NSRect visibleFrame = [screen visibleFrame];
 		 
-		 COCOA_TO_SCREEN_COORDINATES(frame);
-		 COCOA_TO_SCREEN_COORDINATES(visibleFrame);
-		 FMTDevLog(@"Screen info: %@ frame: %@ visible frame: %@",screen, RECT_STR(frame), RECT_STR(visibleFrame));
-	 }
+		COCOA_TO_SCREEN_COORDINATES(frame);
+		COCOA_TO_SCREEN_COORDINATES(visibleFrame);
+		FMTDevLog(@"Screen info: %@ frame: %@ visible frame: %@",screen, RECT_STR(frame), RECT_STR(visibleFrame));
+  }
 #endif		 
+   
+   NSArray* screens = [NSScreen screens];
+   int screenCount = [screens count];
+   NSRect visibleScreenRects[screenCount];
+
+   for (int i = 0; i < screenCount; i++) {
+     NSRect r = [[screens objectAtIndex:i] visibleFrame];
+     COCOA_TO_SCREEN_COORDINATES(r);
+     visibleScreenRects[i] = r;
+   }
 	 
 	// get the screen which is the best fit for the window
 	NSScreen *screen = [self chooseScreenForWindow_:windowRect];
@@ -203,7 +213,7 @@ SINGLETON_BOILERPLATE(WindowSizer, sharedWindowSize);
    
 	// execute shift it action to reposition the application window
 	ShiftItFunctionRef actionFunction = [action action];
-	NSRect shiftedRect = actionFunction(visibleScreenRect, windowRect);
+	NSRect shiftedRect = actionFunction(visibleScreenRect, windowRect, visibleScreenRects, screenCount);
 	FMTDevLog(@"shifted window rect: %@", RECT_STR(shiftedRect));
 	 
 	// readjust adjust the visibility
