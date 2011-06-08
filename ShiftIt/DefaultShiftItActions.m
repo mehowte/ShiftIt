@@ -104,16 +104,36 @@ NSRect ShiftIt_Right(NSRect screen, NSRect window, NSRect screens[], int screenC
 
 NSRect ShiftIt_Top(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
 	NSRect r = screen;
-  r.size.height /= 2.0f;
-	
+
+  for (int i = 0; i < ratioCount-1; i++) {
+    r.size.height = screen.size.height * ratios[i];
+
+    if (almostEqualRects(r,window)) {
+      r.size.height = screen.size.height * ratios[i+1];
+      return r;
+    }
+  }
+
+  r.size.height = screen.size.height * ratios[0];
 	return r;
 }
 
 NSRect ShiftIt_Bottom(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
 	NSRect r = screen;
 
-	r.origin.y = screen.origin.y + screen.size.height / 2.0f;
-	r.size.height /= 2.0f;
+	for (int i = 0; i < ratioCount-1; i++) {
+    r.size.height = screen.size.height * ratios[i];
+    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+
+    if (almostEqualRects(r,window)) {
+      r.size.height = screen.size.height * ratios[i+1];
+      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+      return r;
+    }
+  }
+  
+  r.size.height = screen.size.height * ratios[0];
+  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
 	
 	return r;
 }
@@ -121,8 +141,19 @@ NSRect ShiftIt_Bottom(NSRect screen, NSRect window, NSRect screens[], int screen
 NSRect ShiftIt_TopLeft(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
 	NSRect r = screen;
 
-	r.size.width /= 2.0f;
-	r.size.height /= 2.0f;
+	for (int i = 0; i < ratioCount-1; i++) {
+    r.size.width = screen.size.width * ratios[i];
+    r.size.height = screen.size.height * ratios[i];
+
+    if (almostEqualRects(r,window)) {
+      r.size.width = screen.size.width * ratios[i+1];
+      r.size.height = screen.size.height * ratios[i+1];
+      return r;
+    }
+  }
+  
+  r.size.width = screen.size.width * ratios[0];
+  r.size.height = screen.size.height * ratios[0];
 	
 	return r;
 }
@@ -130,10 +161,22 @@ NSRect ShiftIt_TopLeft(NSRect screen, NSRect window, NSRect screens[], int scree
 NSRect ShiftIt_TopRight(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
 	NSRect r = screen;
 
-  r.origin.x += screen.size.width / 2.0f;
+  for (int i = 0; i < ratioCount-1; i++) {
+    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+    r.size.width = screen.size.width * ratios[i];
+    r.size.height = screen.size.height * ratios[i];
 
-	r.size.width /= 2.0f;
-	r.size.height /= 2.0f;
+    if (almostEqualRects(r,window)) {
+      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+      r.size.width = screen.size.width * ratios[i+1];
+      r.size.height = screen.size.height * ratios[i+1];
+      return r;
+    }
+  }
+  
+  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+  r.size.width = screen.size.width * ratios[0];
+  r.size.height = screen.size.height * ratios[0];
 	
 	return r;
 }
@@ -141,10 +184,22 @@ NSRect ShiftIt_TopRight(NSRect screen, NSRect window, NSRect screens[], int scre
 NSRect ShiftIt_BottomLeft(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
 	NSRect r = screen;
 	
-	r.origin.y += screen.size.height / 2.0f;
-	
-	r.size.width /= 2.0f;
-	r.size.height /= 2.0f;
+	for (int i = 0; i < ratioCount-1; i++) {
+    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+    r.size.width = screen.size.width * ratios[i];
+    r.size.height = screen.size.height * ratios[i];
+
+    if (almostEqualRects(r,window)) {
+      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+      r.size.width = screen.size.width * ratios[i+1];
+      r.size.height = screen.size.height * ratios[i+1];
+      return r;
+    }
+  }
+  
+  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+  r.size.width = screen.size.width * ratios[0];
+  r.size.height = screen.size.height * ratios[0];
 	
 	return r;
 }
@@ -152,11 +207,25 @@ NSRect ShiftIt_BottomLeft(NSRect screen, NSRect window, NSRect screens[], int sc
 NSRect ShiftIt_BottomRight(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
 	NSRect r = screen;
 	
-	r.origin.x += screen.size.width / 2.0f;
-	r.origin.y += screen.size.height / 2.0f;
-	
-	r.size.width /= 2.0f;
-	r.size.height /= 2.0f;
+	for (int i = 0; i < ratioCount-1; i++) {
+    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+    r.size.width = screen.size.width * ratios[i];
+    r.size.height = screen.size.height * ratios[i];
+
+    if (almostEqualRects(r,window)) {
+      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+      r.size.width = screen.size.width * ratios[i+1];
+      r.size.height = screen.size.height * ratios[i+1];
+      return r;
+    }
+  }
+  
+  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+  r.size.width = screen.size.width * ratios[0];
+  r.size.height = screen.size.height * ratios[0];
 	
 	return r;
 }
