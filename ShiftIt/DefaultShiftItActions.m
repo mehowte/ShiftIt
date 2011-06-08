@@ -162,21 +162,21 @@ NSRect ShiftIt_TopRight(NSRect screen, NSRect window, NSRect screens[], int scre
 	NSRect r = screen;
 
   for (int i = 0; i < ratioCount-1; i++) {
-    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
     r.size.width = screen.size.width * ratios[i];
     r.size.height = screen.size.height * ratios[i];
+    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
 
     if (almostEqualRects(r,window)) {
-      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
       r.size.width = screen.size.width * ratios[i+1];
       r.size.height = screen.size.height * ratios[i+1];
+      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
       return r;
     }
   }
   
-  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
   r.size.width = screen.size.width * ratios[0];
   r.size.height = screen.size.height * ratios[0];
+  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
 	
 	return r;
 }
@@ -185,21 +185,21 @@ NSRect ShiftIt_BottomLeft(NSRect screen, NSRect window, NSRect screens[], int sc
 	NSRect r = screen;
 	
 	for (int i = 0; i < ratioCount-1; i++) {
-    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
     r.size.width = screen.size.width * ratios[i];
     r.size.height = screen.size.height * ratios[i];
+    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
 
     if (almostEqualRects(r,window)) {
-      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
       r.size.width = screen.size.width * ratios[i+1];
       r.size.height = screen.size.height * ratios[i+1];
+      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
       return r;
     }
   }
   
-  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
   r.size.width = screen.size.width * ratios[0];
   r.size.height = screen.size.height * ratios[0];
+  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
 	
 	return r;
 }
@@ -208,24 +208,24 @@ NSRect ShiftIt_BottomRight(NSRect screen, NSRect window, NSRect screens[], int s
 	NSRect r = screen;
 	
 	for (int i = 0; i < ratioCount-1; i++) {
-    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
     r.size.width = screen.size.width * ratios[i];
     r.size.height = screen.size.height * ratios[i];
+    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
 
     if (almostEqualRects(r,window)) {
-      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
       r.size.width = screen.size.width * ratios[i+1];
       r.size.height = screen.size.height * ratios[i+1];
+      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
       return r;
     }
   }
   
-  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
   r.size.width = screen.size.width * ratios[0];
   r.size.height = screen.size.height * ratios[0];
+  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
 	
 	return r;
 }
