@@ -67,167 +67,164 @@ static float ratios[] = {
   2.0/5.0
 };
 
-NSRect ShiftIt_Left(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
+int findLeftCycleIndex(NSRect screen, NSRect window) {
 	NSRect r = screen;
-
   for (int i = 0; i < ratioCount-1; i++) {
     r.size.width = screen.size.width * ratios[i];
 
     if (almostEqualRects(r,window)) {
-      r.size.width = screen.size.width * ratios[i+1];
-      return r;
+      return i;
     }
   }
+  return -1;
+}
+int findTopCycleIndex(NSRect screen, NSRect window) {
+	NSRect r = screen;
+  for (int i = 0; i < ratioCount-1; i++) {
+    r.size.height = screen.size.height * ratios[i];
+
+    if (almostEqualRects(r,window)) {
+      return i;
+    }
+  }
+  return -1;
+}
+int findRightCycleIndex(NSRect screen, NSRect window) {
+	NSRect r = screen;
+  for (int i = 0; i < ratioCount-1; i++) {
+    r.size.width = screen.size.width * ratios[i];
+    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
+
+    if (almostEqualRects(r,window)) {
+      return i;
+    }
+  }
+  return -1;
+}
+int findBottomCycleIndex(NSRect screen, NSRect window) {
+	NSRect r = screen;
+  for (int i = 0; i < ratioCount-1; i++) {
+    r.size.height = screen.size.height * ratios[i];
+    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
+
+    if (almostEqualRects(r,window)) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+NSRect computeRectangleWidthByCycleIndex(NSRect alreadyComputedRectangle, int cycleIndex) {
+  if (cycleIndex == -1) {
+    cycleIndex = 0
+  }
   
-  r.size.width = screen.size.width * ratios[0];
-  return r;
+  alreadyComputedRectangle.size.width = screen.size.width * ratios[cycleIndex];
+}
+NSRect computeRectangleHeightByCycleIndex(NSRect alreadyComputedRectangle, int cycleIndex) {
+  if (cycleIndex == -1) {
+    cycleIndex = 0
+  }
+  
+  alreadyComputedRectangle.size.height = screen.size.height * ratios[cycleIndex];
+}
+NSRect adjustTop(NSRect alreadyComputedRectangle, int cycleIndex) {
+  r.origin.y = screen.origin.y + screen.size.height - alreadyComputedRectangle.size.height;
+}
+NSRect adjustLeft(NSRect screen, NSRect alreadyComputedRectangle) {
+  r.origin.x = screen.origin.x + screen.size.width - alreadyComputedRectangle.size.width;
+}
+
+NSRect moveLeftByCycleIndex(NSRect screen, int cycleIndex) {
+  return computeRectangleWidthByCycleIndex(screen, cycleIndex);
+}
+NSRect moveTopByCycleIndex(NSRect screen, int cycleIndex) {
+  return computeRectangleHeightByCycleIndex(screen, cycleIndex);
+}
+NSRect moveRightByCycleIndex(NSRect screen, int cycleIndex) {
+  NSRect result = screen;
+  result = computeRectangleWidthByCycleIndex(result, cycleIndex);
+  result = adjustLeft(screen, result);
+  return result
+}
+NSRect moveBottomByCycleIndex(NSRect screen, int cycleIndex) {
+  NSRect result = screen;
+  result = computeRectangleHeightByCycleIndex(result, cycleIndex);
+  result = adjustTop(screen, result);
+  return result;
+}
+
+NSRect moveTopLeftByCycleIndex(NSRect screen, int cycleIndex) {
+  NSRect result = screen;
+  result = computeRectangleWidthByCycleIndex(result, cycleIndex);
+  result = computeRectangleHeightByCycleIndex(result, cycleIndex);
+  return result;
+}
+NSRect moveTopRightByCycleIndex(NSRect screen, int cycleIndex) {
+  NSRect result = screen;
+  result = computeRectangleWidthByCycleIndex(result, cycleIndex);
+  result = computeRectangleHeightByCycleIndex(result, cycleIndex);
+  result = adjustLeft(screen, result);
+  return result;
+}
+NSRect moveBottomLeftByCycleIndex(NSRect screen, int cycleIndex) {
+  NSRect result = screen;
+  result = computeRectangleWidthByCycleIndex(result, cycleIndex);
+  result = computeRectangleHeightByCycleIndex(result, cycleIndex);
+  result = adjustTop(screen, result);
+  return result;
+}
+NSRect moveBottomRightByCycleIndex(NSRect screen, int cycleIndex) {
+  NSRect result = screen;
+  result = computeRectangleWidthByCycleIndex(result, cycleIndex);
+  result = computeRectangleHeightByCycleIndex(result, cycleIndex);
+  result = adjustLeft(screen, result);
+  result = adjustTop(screen, result);
+  return result;
+}
+
+
+
+
+
+NSRect ShiftIt_Left(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
+  cycleIndex = findLeftCycleIndex(screen, window);
+  return moveLeftByCycleIndex(screen, cycleIndex);
 }
 
 NSRect ShiftIt_Right(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
-	NSRect r = screen;
-  
-  for (int i = 0; i < ratioCount-1; i++) {
-    r.size.width = screen.size.width * ratios[i];
-    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-
-    if (almostEqualRects(r,window)) {
-      r.size.width = screen.size.width * ratios[i+1];
-      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-      return r;
-    }
-  }
-  
-  r.size.width = screen.size.width * ratios[0];
-  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-  return r;
+  cycleIndex = findRightCycleIndex(screen, window);
+  return moveRightByCycleIndex(screen, cycleIndex);
 }
 
 NSRect ShiftIt_Top(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
-	NSRect r = screen;
-
-  for (int i = 0; i < ratioCount-1; i++) {
-    r.size.height = screen.size.height * ratios[i];
-
-    if (almostEqualRects(r,window)) {
-      r.size.height = screen.size.height * ratios[i+1];
-      return r;
-    }
-  }
-
-  r.size.height = screen.size.height * ratios[0];
-	return r;
+  cycleIndex = findTopCycleIndex(screen, window);
+  return moveTopByCycleIndex(screen, cycleIndex);
 }
 
 NSRect ShiftIt_Bottom(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
-	NSRect r = screen;
-
-	for (int i = 0; i < ratioCount-1; i++) {
-    r.size.height = screen.size.height * ratios[i];
-    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-
-    if (almostEqualRects(r,window)) {
-      r.size.height = screen.size.height * ratios[i+1];
-      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-      return r;
-    }
-  }
-  
-  r.size.height = screen.size.height * ratios[0];
-  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-	
-	return r;
+  cycleIndex = findBottomCycleIndex(screen, window);
+  return moveBottomByCycleIndex(screen, cycleIndex);
 }
 
 NSRect ShiftIt_TopLeft(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
-	NSRect r = screen;
-
-	for (int i = 0; i < ratioCount-1; i++) {
-    r.size.width = screen.size.width * ratios[i];
-    r.size.height = screen.size.height * ratios[i];
-
-    if (almostEqualRects(r,window)) {
-      r.size.width = screen.size.width * ratios[i+1];
-      r.size.height = screen.size.height * ratios[i+1];
-      return r;
-    }
-  }
-  
-  r.size.width = screen.size.width * ratios[0];
-  r.size.height = screen.size.height * ratios[0];
-	
-	return r;
+  cycleIndex = findTopLeftCycleIndex(screen, window);
+  return moveTopLeftByCycleIndex(screen, cycleIndex);
 }
 
 NSRect ShiftIt_TopRight(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
-	NSRect r = screen;
-
-  for (int i = 0; i < ratioCount-1; i++) {
-    r.size.width = screen.size.width * ratios[i];
-    r.size.height = screen.size.height * ratios[i];
-    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-
-    if (almostEqualRects(r,window)) {
-      r.size.width = screen.size.width * ratios[i+1];
-      r.size.height = screen.size.height * ratios[i+1];
-      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-      return r;
-    }
-  }
-  
-  r.size.width = screen.size.width * ratios[0];
-  r.size.height = screen.size.height * ratios[0];
-  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-	
-	return r;
+  cycleIndex = findTopRightCycleIndex(screen, window);
+  return moveTopRightByCycleIndex(screen, cycleIndex);
 }
 
 NSRect ShiftIt_BottomLeft(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
-	NSRect r = screen;
-	
-	for (int i = 0; i < ratioCount-1; i++) {
-    r.size.width = screen.size.width * ratios[i];
-    r.size.height = screen.size.height * ratios[i];
-    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-
-    if (almostEqualRects(r,window)) {
-      r.size.width = screen.size.width * ratios[i+1];
-      r.size.height = screen.size.height * ratios[i+1];
-      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-      return r;
-    }
-  }
-  
-  r.size.width = screen.size.width * ratios[0];
-  r.size.height = screen.size.height * ratios[0];
-  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-	
-	return r;
+  cycleIndex = findBottomLeftCycleIndex(screen, window);
+  return moveBottomLeftCycleIndex(screen, cycleIndex);
 }
 
 NSRect ShiftIt_BottomRight(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
-	NSRect r = screen;
-	
-	for (int i = 0; i < ratioCount-1; i++) {
-    r.size.width = screen.size.width * ratios[i];
-    r.size.height = screen.size.height * ratios[i];
-    r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-    r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-
-    if (almostEqualRects(r,window)) {
-      r.size.width = screen.size.width * ratios[i+1];
-      r.size.height = screen.size.height * ratios[i+1];
-      r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-      r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-      return r;
-    }
-  }
-  
-  r.size.width = screen.size.width * ratios[0];
-  r.size.height = screen.size.height * ratios[0];
-  r.origin.x = screen.origin.x + screen.size.width - r.size.width;
-  r.origin.y = screen.origin.y + screen.size.height - r.size.height;
-	
-	return r;
+  cycleIndex = findBottomRightCycleIndex(screen, window);
+  return moveBottomRightByCycleIndex(screen, cycleIndex);
 }
 
 NSRect ShiftIt_FullScreen(NSRect screen, NSRect window, NSRect screens[], int screenCount) {
